@@ -1,0 +1,370 @@
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-wood mb-0"><i class="bi bi-speedometer2"></i> لوحة تحكم الأدمن الشاملة</h2>
+    <button class="btn btn-warning fw-bold" data-bs-toggle="modal" data-bs-target="#addAdminModal">
+      <i class="bi bi-person-plus-fill me-1"></i> إضافة أدمن جديد
+    </button>
+  </div>
+
+  <!-- Dashboard Navigation Tabs -->
+  <ul class="nav nav-pills bg-white p-2 rounded-4 shadow-sm mb-4 gap-2">
+    <li class="nav-item">
+      <button class="nav-link fw-bold" [class.active]="activeTab === 'overview'" (click)="setTab('overview')">
+        <i class="bi bi-graph-up me-1"></i> الإحصائيات
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link fw-bold" [class.active]="activeTab === 'products'" (click)="setTab('products')">
+        <i class="bi bi-box-seam me-1"></i> المنتجات ({{ products.length }})
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link fw-bold" [class.active]="activeTab === 'categories'" (click)="setTab('categories')">
+        <i class="bi bi-tags me-1"></i> الأقسام ({{ categories.length }})
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link fw-bold" [class.active]="activeTab === 'users'" (click)="setTab('users')">
+        <i class="bi bi-people me-1"></i> إدارة المستخدمين ({{ users.length }})
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link fw-bold" [class.active]="activeTab === 'orders'" (click)="setTab('orders')">
+        <i class="bi bi-cart-check me-1"></i> الطلبات والاسترداد ({{ orders.length }})
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link fw-bold" [class.active]="activeTab === 'messages'" (click)="setTab('messages')">
+        <i class="bi bi-envelope me-1"></i> الرسائل والتوصيات ({{ messages.length }})
+      </button>
+    </li>
+  </ul>
+
+  <!-- TAB 1: OVERVIEW & STATS -->
+  <div *ngIf="activeTab === 'overview'">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="card bg-wood text-white rounded-4 p-4 shadow-sm text-center">
+          <h5>إجمالي المنتجات</h5>
+          <h1 class="fw-bold mb-0">{{ stats.totalProducts }}</h1>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-warning text-dark rounded-4 p-4 shadow-sm text-center">
+          <h5>إجمالي الطلبات</h5>
+          <h1 class="fw-bold mb-0">{{ stats.totalOrders }}</h1>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-success text-white rounded-4 p-4 shadow-sm text-center">
+          <h5>إجمالي الإيرادات</h5>
+          <h1 class="fw-bold mb-0">{{ stats.totalRevenue }} ج.م</h1>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-primary text-white rounded-4 p-4 shadow-sm text-center">
+          <h5>المستخدمين المسجلين</h5>
+          <h1 class="fw-bold mb-0">{{ stats.totalUsers }}</h1>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-danger text-white rounded-4 p-4 shadow-sm text-center">
+          <h5>المستخدمين المحظورين</h5>
+          <h1 class="fw-bold mb-0">{{ stats.blockedUsers }}</h1>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-secondary text-white rounded-4 p-4 shadow-sm text-center">
+          <h5>طلبات الاسترداد</h5>
+          <h1 class="fw-bold mb-0">{{ stats.totalRefunds }}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: PRODUCTS MANAGEMENT -->
+  <div *ngIf="activeTab === 'products'">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+          <h5 class="fw-bold mb-3 text-wood">{{ editModeProduct ? 'تعديل منتج' : 'إضافة منتج جديد' }}</h5>
+          <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
+            <div class="mb-2">
+              <label class="form-label small fw-bold">اسم المنتج</label>
+              <input type="text" class="form-control" formControlName="name">
+            </div>
+            <div class="mb-2">
+              <label class="form-label small fw-bold">الوصف</label>
+              <textarea class="form-control" rows="2" formControlName="desc"></textarea>
+            </div>
+            <div class="row g-2 mb-2">
+              <div class="col-6">
+                <label class="form-label small fw-bold">السعر (ج.م)</label>
+                <input type="number" class="form-control" formControlName="price">
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-bold">المخزون</label>
+                <input type="number" class="form-control" formControlName="stock">
+              </div>
+            </div>
+            <div class="mb-2">
+              <label class="form-label small fw-bold">القسم</label>
+              <select class="form-select" formControlName="category">
+                <option *ngFor="let cat of categories" [value]="cat.name">{{ cat.name }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">صورة المنتج</label>
+              <input type="file" class="form-control" (change)="onFileChange($event)">
+            </div>
+            <button type="submit" [disabled]="productForm.invalid" class="btn btn-wood w-100 fw-bold mb-2">
+              {{ editModeProduct ? 'حفظ التعديلات' : 'إضافة المنتج' }}
+            </button>
+            <button type="button" *ngIf="editModeProduct" (click)="resetProductForm()" class="btn btn-outline-secondary w-100 btn-sm">إلغاء</button>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+          <h5 class="fw-bold mb-3 text-wood">جدول المنتجات</h5>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>الصورة</th>
+                  <th>الاسم</th>
+                  <th>القسم</th>
+                  <th>السعر</th>
+                  <th>إجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let p of products">
+                  <td><img [src]="fileURL + p.imgURL" style="width: 45px; height: 45px; object-fit: cover;" class="rounded-2"></td>
+                  <td class="fw-bold small">{{ p.name }}</td>
+                  <td><span class="badge bg-warning text-dark small">{{ p.category }}</span></td>
+                  <td class="fw-bold text-wood small">{{ p.price }} ج.م</td>
+                  <td>
+                    <button (click)="editProduct(p)" class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></button>
+                    <button (click)="deleteProduct(p._id)" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: CATEGORIES MANAGEMENT -->
+  <div *ngIf="activeTab === 'categories'">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+          <h5 class="fw-bold mb-3 text-wood">إضافة قسم جديد</h5>
+          <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">اسم القسم</label>
+              <input type="text" class="form-control" formControlName="name">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">وصف القسم</label>
+              <input type="text" class="form-control" formControlName="desc">
+            </div>
+            <button type="submit" [disabled]="categoryForm.invalid" class="btn btn-wood w-100 fw-bold">إضافة القسم</button>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+          <h5 class="fw-bold mb-3 text-wood">الأقسام المتاحة</h5>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>الاسم</th>
+                  <th>Slug</th>
+                  <th>الوصف</th>
+                  <th>حذف</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let c of categories">
+                  <td class="fw-bold">{{ c.name }}</td>
+                  <td><code>{{ c.slug }}</code></td>
+                  <td class="text-muted small">{{ c.desc }}</td>
+                  <td>
+                    <button (click)="deleteCategory(c._id!)" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: USERS MANAGEMENT (ADD ADMIN & BLOCK USER) -->
+  <div *ngIf="activeTab === 'users'">
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold text-wood mb-0">إدارة المستخدمين والحظر</h5>
+        <button class="btn btn-sm btn-warning fw-bold" data-bs-toggle="modal" data-bs-target="#addAdminModal">
+          <i class="bi bi-person-plus-fill me-1"></i> + إضافة أدمن
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>البريد الإلكتروني</th>
+              <th>الصلاحية</th>
+              <th>حالة الحساب</th>
+              <th>إجراءات الحظر والتعديل</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of users">
+              <td class="fw-bold">{{ u.name }}</td>
+              <td>{{ u.email }}</td>
+              <td>
+                <span class="badge" [class.bg-danger]="u.role === 'admin'" [class.bg-secondary]="u.role === 'user'">
+                  {{ u.role === 'admin' ? 'أدمن' : 'مستخدم' }}
+                </span>
+              </td>
+              <td>
+                <span class="badge" [class.bg-danger]="u.isBlocked" [class.bg-success]="!u.isBlocked">
+                  {{ u.isBlocked ? 'محظور (Blocked)' : 'نشط (Active)' }}
+                </span>
+              </td>
+              <td>
+                <button (click)="toggleBlock(u._id!)" class="btn btn-sm me-2" [class.btn-outline-danger]="!u.isBlocked" [class.btn-success]="u.isBlocked">
+                  <i class="bi" [class.bi-slash-circle]="!u.isBlocked" [class.bi-check-circle]="u.isBlocked"></i>
+                  {{ u.isBlocked ? 'إلغاء الحظر' : 'حظر المستخدم' }}
+                </button>
+                <button (click)="deleteUser(u._id!)" class="btn btn-sm btn-outline-secondary"><i class="bi bi-trash"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 5: ORDERS & REFUNDS -->
+  <div *ngIf="activeTab === 'orders'">
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+      <h5 class="fw-bold mb-3 text-wood">إدارة الطلبات والاسترداد</h5>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>رقم الطلب</th>
+              <th>العميل</th>
+              <th>الإجمالي</th>
+              <th>العنوان</th>
+              <th>حالة الطلب الحالية</th>
+              <th>تحديث الحالة</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let o of orders">
+              <td><small class="text-muted">{{ o._id }}</small></td>
+              <td class="fw-bold">{{ $any(o.user)?.name || 'عميل' }}</td>
+              <td class="fw-bold text-wood">{{ o.totalAmount }} ج.م</td>
+              <td><small>{{ o.address }}</small></td>
+              <td>
+                <span class="badge" 
+                  [class.bg-warning]="o.status === 'Pending'" 
+                  [class.bg-info]="o.status === 'Processing'" 
+                  [class.bg-primary]="o.status === 'Shipped'" 
+                  [class.bg-success]="o.status === 'Completed'" 
+                  [class.bg-danger]="o.status === 'Refunded' || o.status === 'Cancelled'">
+                  {{ o.status }}
+                </span>
+              </td>
+              <td>
+                <select class="form-select form-select-sm" [ngModel]="o.status" (ngModelChange)="changeOrderStatus(o._id!, $event)">
+                  <option value="Pending">Pending (قيد الانتظار)</option>
+                  <option value="Processing">Processing (جاري التجهيز)</option>
+                  <option value="Shipped">Shipped (تم الشحن)</option>
+                  <option value="Completed">Completed (مكتمل)</option>
+                  <option value="Refunded">Refunded (مسترد)</option>
+                  <option value="Cancelled">Cancelled (ملغي)</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 6: MESSAGES & TESTIMONIALS -->
+  <div *ngIf="activeTab === 'messages'">
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+      <h5 class="fw-bold mb-3 text-wood">رسائل واستفسارات العملاء</h5>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>الاسم</th>
+              <th>البريد</th>
+              <th>الموضوع</th>
+              <th>الرسالة</th>
+              <th>النوع</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let m of messages">
+              <td class="fw-bold">{{ m.name }}</td>
+              <td>{{ m.email }}</td>
+              <td>{{ m.subject }}</td>
+              <td><small class="text-muted">{{ m.message }}</small></td>
+              <td>
+                <span class="badge" [class.bg-warning]="m.isTestimonial" [class.bg-secondary]="!m.isTestimonial">
+                  {{ m.isTestimonial ? 'رأي عميل (Testimonial)' : 'استفسار' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD ADMIN MODAL -->
+<div class="modal fade" id="addAdminModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content rounded-4 border-0">
+      <div class="modal-header bg-wood text-white">
+        <h5 class="modal-header-title modal-title fw-bold"><i class="bi bi-person-plus-fill me-1"></i> إضافة أدمن جديد</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form [formGroup]="adminForm" (ngSubmit)="saveAdmin()">
+          <div class="mb-3">
+            <label class="form-label fw-bold">اسم الأدمن</label>
+            <input type="text" class="form-control" formControlName="name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">البريد الإلكتروني</label>
+            <input type="email" class="form-control" formControlName="email">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">كلمة السر</label>
+            <input type="password" class="form-control" formControlName="password">
+          </div>
+          <button type="submit" [disabled]="adminForm.invalid" data-bs-dismiss="modal" class="btn btn-wood w-100 fw-bold">
+            حفظ وتعيين أدمن
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

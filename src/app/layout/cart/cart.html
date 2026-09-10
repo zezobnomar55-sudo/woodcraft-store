@@ -1,0 +1,83 @@
+<div class="container my-5">
+  <h2 class="fw-bold text-wood mb-4"><i class="bi bi-cart3"></i> سلة المشتريات</h2>
+
+  <div *ngIf="orderSuccess" class="alert alert-success p-4 rounded-4 shadow-sm text-center">
+    <i class="bi bi-check-circle-fill text-success fs-1 mb-2 d-block"></i>
+    <h4 class="fw-bold">تم تأكيد طلبك بنجاح!</h4>
+    <p>شكراً لثقتك بنا في WoodCraft. سيتم التواصل معك قريباً لتسليم الشحنة.</p>
+    <a routerLink="/products" class="btn btn-wood">متابعة التسوق</a>
+  </div>
+
+  <div *ngIf="!orderSuccess">
+    <div class="row g-4" *ngIf="cartItems.length > 0; else emptyCart">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 p-3">
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>المنتج</th>
+                  <th>السعر</th>
+                  <th>الكمية</th>
+                  <th>الإجمالي</th>
+                  <th>إزالة</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of cartItems">
+                  <td>
+                    <div class="d-flex align-items-center gap-3">
+                      <img [src]="fileURL + item.product.imgURL" class="rounded-3" style="width: 60px; height: 60px; object-fit: cover;">
+                      <span class="fw-bold">{{ item.product.name }}</span>
+                    </div>
+                  </td>
+                  <td>{{ item.product.price }} ج.م</td>
+                  <td>
+                    <input type="number" min="1" class="form-control text-center" style="width: 70px;" [ngModel]="item.quantity" (ngModelChange)="updateQty(item.product._id, $event)">
+                  </td>
+                  <td class="fw-bold text-wood">{{ item.product.price * item.quantity }} ج.م</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-danger" (click)="removeItem(item.product._id)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+          <h4 class="fw-bold mb-3">ملخص الطلب</h4>
+          <div class="d-flex justify-content-between fs-5 mb-3">
+            <span>إجمالي المنتجات:</span>
+            <span class="fw-bold text-wood">{{ getTotal() }} جنيه</span>
+          </div>
+          <div class="d-flex justify-content-between fs-6 mb-3 text-muted">
+            <span>الشحن:</span>
+            <span class="text-success fw-bold">مجاني</span>
+          </div>
+          <hr>
+          <div class="mb-3">
+            <label class="form-label fw-bold">عنوان التوصيل:</label>
+            <input type="text" class="form-control" [(ngModel)]="address">
+          </div>
+
+          <button (click)="checkout()" class="btn btn-wood btn-lg w-100 fw-bold">
+            <i class="bi bi-credit-card me-1"></i> إتمام الشراء الآن
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #emptyCart>
+      <div class="text-center py-5 bg-white rounded-4 shadow-sm">
+        <i class="bi bi-cart-x fs-1 text-muted d-block mb-3"></i>
+        <h4>سلة المشتريات فارغة</h4>
+        <a routerLink="/products" class="btn btn-wood mt-2">استكشف المنتجات الآن</a>
+      </div>
+    </ng-template>
+  </div>
+</div>

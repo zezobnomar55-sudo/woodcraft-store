@@ -1,0 +1,30 @@
+<div class="container my-5" *ngIf="product">
+  <div class="row g-5 align-items-center bg-white p-4 rounded-4 shadow-sm">
+    <div class="col-md-6">
+      <img [src]="fileURL + product.imgURL" class="img-fluid rounded-4 shadow" [alt]="product.name" style="max-height: 450px; width: 100%; object-fit: cover;">
+    </div>
+    <div class="col-md-6">
+      <span class="badge bg-warning text-dark mb-2 fs-6">{{ product.category }}</span>
+      <h2 class="fw-bold text-dark mb-3">{{ product.name }}</h2>
+      <h3 class="text-wood fw-bold mb-3">{{ product.price }} جنيه مصري</h3>
+      <p class="text-muted fs-5 mb-4">{{ product.desc }}</p>
+
+      <div class="mb-4">
+        <span class="text-success fw-bold me-2"><i class="bi bi-check-circle-fill"></i> متوفر في المخزون ({{ product.stock }} قطعة)</span>
+      </div>
+
+      <div class="d-flex align-items-center gap-3 mb-4">
+        <span class="fw-bold">الكمية:</span>
+        <div class="input-group" style="width: 130px;">
+          <button class="btn btn-outline-secondary" (click)="dec()">-</button>
+          <input type="text" class="form-control text-center" [value]="quantity" readonly>
+          <button class="btn btn-outline-secondary" (click)="inc()">+</button>
+        </div>
+      </div>
+
+      <button (click)="addToCart()" class="btn btn-wood btn-lg w-100 py-3 fw-bold rounded-3">
+        <i class="bi bi-cart-plus me-2"></i> إضافة إلى سلة المشتريات
+      </button>
+    </div>
+  </div>
+</div>

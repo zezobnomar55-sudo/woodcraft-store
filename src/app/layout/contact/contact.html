@@ -1,0 +1,48 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-lg rounded-4 p-5">
+        <h3 class="fw-bold text-wood text-center mb-2"><i class="bi bi-envelope-fill me-2"></i> تواصل معنا</h3>
+        <p class="text-center text-muted mb-4">يسعدنا تلقي استفساراتكم وآرائكم حول منتجاتنا الخشبية الطبيعية</p>
+
+        <div *ngIf="submitted" class="alert alert-success p-3 rounded-3 text-center">
+          <i class="bi bi-check-circle-fill me-1"></i> تم إرسال رسالتك بنجاح! شكرًا لتواصلك معنا.
+        </div>
+
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold">الاسم بالكامل</label>
+              <input type="text" class="form-control" formControlName="name">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold">البريد الإلكتروني</label>
+              <input type="email" class="form-control" formControlName="email">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">موضوع الرسالة</label>
+            <input type="text" class="form-control" formControlName="subject">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">نص الرسالة</label>
+            <textarea class="form-control" rows="4" formControlName="message"></textarea>
+          </div>
+
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" formControlName="isTestimonial" id="testCheck">
+            <label class="form-check-label fw-semibold text-muted" for="testCheck">
+              أوافق على نشر هذه الرسالة كتقييم وتوصية (Testimonial) على الموقع
+            </label>
+          </div>
+
+          <button type="submit" [disabled]="contactForm.invalid" class="btn btn-wood btn-lg w-100 fw-bold">
+            إرسال الرسالة
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

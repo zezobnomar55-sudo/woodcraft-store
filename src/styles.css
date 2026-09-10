@@ -1,0 +1,116 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+:root {
+  --wood-brown: #5c3a21;
+  --wood-light: #d4a373;
+  --wood-bg: #fefae0;
+  --wood-dark: #331e11;
+  --wood-gold: #e6a15c;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f6f4ef;
+  color: #2b2b2b;
+}
+
+/* GLASSMORPHISM NAVBAR */
+.navbar-wood {
+  background: rgba(51, 30, 17, 0.94) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 2px solid var(--wood-gold);
+  transition: all 0.3s ease;
+}
+
+/* HERO BANNER ANIMATIONS */
+.hero-banner {
+  background: linear-gradient(135deg, #331e11 0%, #5c3a21 50%, #8c532b 100%);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(230, 161, 92, 0.3);
+}
+
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+  animation: pulseLight 8s infinite alternate ease-in-out;
+}
+
+@keyframes pulseLight {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.15) rotate(10deg); }
+}
+
+/* CARD HOVER ANIMATION & SHIMMER */
+.card-product {
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.card-product:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(92, 58, 33, 0.22) !important;
+}
+
+.card-product .card-img-top {
+  transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.card-product:hover .card-img-top {
+  transform: scale(1.08);
+}
+
+/* BUTTON ANIMATIONS */
+.btn-wood {
+  background: linear-gradient(135deg, var(--wood-brown), var(--wood-dark));
+  color: #fff;
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(92, 58, 33, 0.25);
+}
+
+.btn-wood:hover {
+  background: linear-gradient(135deg, var(--wood-dark), #1a0f08);
+  color: #fff;
+  transform: translateY(-2deg);
+  box-shadow: 0 6px 18px rgba(92, 58, 33, 0.35);
+}
+
+.btn-outline-wood {
+  border: 2px solid var(--wood-brown);
+  color: var(--wood-brown);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-wood:hover {
+  background-color: var(--wood-brown);
+  color: #fff;
+  transform: translateY(-2deg);
+}
+
+/* FADE IN ANIMATION CLASS */
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* CUSTOM BADGES */
+.badge-gold {
+  background-color: var(--wood-gold);
+  color: #331e11;
+  font-weight: bold;
+}

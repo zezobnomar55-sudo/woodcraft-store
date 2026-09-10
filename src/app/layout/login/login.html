@@ -1,0 +1,32 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="card border-0 shadow-lg rounded-4 p-4">
+        <h3 class="fw-bold text-center text-wood mb-4">تسجيل الدخول</h3>
+
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">البريد الإلكتروني</label>
+            <input type="email" class="form-control py-2" formControlName="email" placeholder="name@example.com">
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold">كلمة السر</label>
+            <input type="password" class="form-control py-2" formControlName="password">
+          </div>
+
+          <button type="submit" [disabled]="loginForm.invalid" class="btn btn-wood btn-lg w-100 fw-bold py-2 mb-3">
+            دخول
+          </button>
+        </form>
+
+        <div class="text-center mt-3">
+          <span class="text-muted">ليس لديك حساب؟ </span>
+          <a routerLink="/register" class="text-wood fw-bold text-decoration-none">إنشاء حساب جديد</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
