@@ -1,18 +1,21 @@
-<div class="container my-4">
-  <div class="text-center mb-4">
-    <h2 class="fw-bold text-wood">معرض المنتجات الخشبية</h2>
-    <p class="text-muted">استكشف جميع منتجاتنا المصنوعة من أجود أنواع الخشب الطبيعي</p>
+<div class="container my-5">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold text-wood display-5">معرض المنتجات الخشبية</h1>
+    <p class="text-muted lead">استكشف جميع منتجاتنا المصنوعة من أجود أنواع الخشب الطبيعي</p>
   </div>
 
   <div class="row g-3 mb-4 align-items-center">
     <div class="col-md-8">
       <div class="d-flex flex-wrap gap-2">
-        <button (click)="filterCategory('')" [class.btn-wood]="selectedCategory === ''" [class.btn-outline-wood]="selectedCategory !== ''" class="btn btn-sm">الكل</button>
-        <button *ngFor="let cat of categories" (click)="filterCategory(cat)" [class.btn-wood]="selectedCategory === cat" [class.btn-outline-wood]="selectedCategory !== cat" class="btn btn-sm">
+        <button class="btn" [class.btn-wood]="selectedCategory === ''" [class.btn-outline-wood]="selectedCategory !== ''" (click)="filterCategory('')">
+          الكل
+        </button>
+        <button *ngFor="let cat of categories" class="btn" [class.btn-wood]="selectedCategory === cat" [class.btn-outline-wood]="selectedCategory !== cat" (click)="filterCategory(cat)">
           {{ cat }}
         </button>
       </div>
     </div>
+
     <div class="col-md-4">
       <div class="input-group">
         <input type="text" class="form-control" placeholder="ابحث عن منتج..." [(ngModel)]="searchQuery" (keyup.enter)="onSearch()">
@@ -21,30 +24,32 @@
     </div>
   </div>
 
-  <div class="row g-4" *ngIf="myProducts.length > 0; else noData">
+  <div class="row g-4" *ngIf="myProducts.length > 0; else noProducts">
     <div class="col-md-4 col-lg-3" *ngFor="let prod of myProducts">
       <div class="card card-product h-100 shadow-sm border-0">
-        <img [src]="fileURL + prod.imgURL" class="card-img-top" [alt]="prod.name" style="height: 200px; object-fit: cover;">
+        <img [src]="getImageUrl(prod.imgURL)" class="card-img-top" [alt]="prod.name" style="height: 220px; object-fit: cover;">
         <div class="card-body d-flex flex-column">
           <span class="badge bg-warning text-dark align-self-start mb-2">{{ prod.category }}</span>
-          <h6 class="card-title fw-bold text-dark mb-1">{{ prod.name }}</h6>
+          <h5 class="card-title fw-bold text-dark fs-6">{{ prod.name }}</h5>
           <p class="card-text text-muted small flex-grow-1">{{ prod.desc }}</p>
-          
+
           <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
-            <span class="fw-bold text-wood fs-5">{{ prod.price }} ج.م</span>
-            <button (click)="addToCart(prod)" class="btn btn-sm btn-wood">
-              <i class="bi bi-cart-plus"></i>
-            </button>
+            <span class="fw-bold fs-5 text-wood">{{ prod.price }} ج.م</span>
+            <div class="d-flex gap-1">
+              <a [routerLink]="['/product', prod.slug]" class="btn btn-sm btn-outline-secondary">التفاصيل</a>
+              <button (click)="addToCart(prod)" class="btn btn-sm btn-wood"><i class="bi bi-cart-plus"></i></button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <ng-template #noData>
-    <div class="text-center py-5 text-muted">
-      <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-      <h5>لا توجد منتجات مطابقة للبحث</h5>
+  <ng-template #noProducts>
+    <div class="text-center py-5 bg-white rounded-4 shadow-sm my-5">
+      <i class="bi bi-box-seam fs-1 text-muted d-block mb-3"></i>
+      <h4>لا توجد منتجات مطابقة للبحث</h4>
+      <button (click)="filterCategory('')" class="btn btn-wood mt-2">عرض كل المنتجات</button>
     </div>
   </ng-template>
 </div>

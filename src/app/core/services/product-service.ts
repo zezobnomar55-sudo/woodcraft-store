@@ -4,7 +4,7 @@ import { environment } from '../../../environments/env';
 import { IProductsRes, IProductRes, IProduct } from '../models/product.model';
 import { of, catchError } from 'rxjs';
 
-const MOCK_PRODUCTS: IProduct[] = [
+export const MOCK_PRODUCTS: IProduct[] = [
   {
     _id: '1',
     name: 'طبق خشب زان محفور يدوياً',

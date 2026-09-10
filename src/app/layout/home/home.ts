@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ProductService } from '../../core/services/product-service';
+import { ProductService, MOCK_PRODUCTS } from '../../core/services/product-service';
 import { MessageService } from '../../core/services/message-service';
 import { CartService } from '../../core/services/cart-service';
 import { IProduct } from '../../core/models/product.model';
 import { IMessage } from '../../core/models/message.model';
-import { environment } from '../../../environments/env';
 
 @Component({
   selector: 'app-home',
@@ -16,9 +15,8 @@ import { environment } from '../../../environments/env';
   styleUrl: './home.css'
 })
 export class Home implements OnInit {
-  featuredProducts: IProduct[] = [];
+  featuredProducts: IProduct[] = MOCK_PRODUCTS.slice(0, 6);
   testimonials: IMessage[] = [];
-  fileURL = environment.fileURL;
 
   constructor(
     private _productService: ProductService,
@@ -29,17 +27,26 @@ export class Home implements OnInit {
   ngOnInit(): void {
     this._productService.getAllProducts().subscribe({
       next: (res) => {
-        this.featuredProducts = (res && res.data) ? res.data.slice(0, 6) : [];
-      },
-      error: (err) => console.log(err)
+        if (res && res.data && res.data.length > 0) {
+          this.featuredProducts = res.data.slice(0, 6);
+        }
+      }
     });
 
     this._messageService.getTestimonials().subscribe({
       next: (res) => {
-        this.testimonials = (res && res.data) ? res.data : [];
-      },
-      error: (err) => console.log(err)
+        if (res && res.data && res.data.length > 0) {
+          this.testimonials = res.data;
+        }
+      }
     });
+  }
+
+  getImageUrl(url: string): string {
+    if (!url) return 'files/plate_1.png';
+    if (url.startsWith('http')) return url;
+    const cleaned = url.replace(/^\/?(files\/)?/, '');
+    return 'files/' + cleaned;
   }
 
   addToCart(product: IProduct): void {
